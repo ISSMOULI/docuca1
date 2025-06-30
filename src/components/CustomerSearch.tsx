@@ -33,11 +33,11 @@ export const CustomerSearch: React.FC<CustomerSearchProps> = ({ data }) => {
 
   const getFieldIcon = (fieldName: string) => {
     const name = fieldName.toLowerCase();
-    if (name.includes('name')) return <User className="w-4 h-4" />;
-    if (name.includes('email')) return <Mail className="w-4 h-4" />;
-    if (name.includes('phone')) return <Phone className="w-4 h-4" />;
-    if (name.includes('address') || name.includes('city')) return <MapPin className="w-4 h-4" />;
-    return <Filter className="w-4 h-4" />;
+    if (name.includes('name')) return <User className="w-4 h-4 flex-shrink-0" />;
+    if (name.includes('email')) return <Mail className="w-4 h-4 flex-shrink-0" />;
+    if (name.includes('phone')) return <Phone className="w-4 h-4 flex-shrink-0" />;
+    if (name.includes('address') || name.includes('city')) return <MapPin className="w-4 h-4 flex-shrink-0" />;
+    return <Filter className="w-4 h-4 flex-shrink-0" />;
   };
 
   if (data.length === 0) {
@@ -51,9 +51,9 @@ export const CustomerSearch: React.FC<CustomerSearchProps> = ({ data }) => {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 h-full flex flex-col">
       {/* Search Controls */}
-      <div className="space-y-3">
+      <div className="space-y-3 flex-shrink-0">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400" />
           <input
@@ -61,14 +61,14 @@ export const CustomerSearch: React.FC<CustomerSearchProps> = ({ data }) => {
             placeholder="Search customers..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
           />
         </div>
 
         <select
           value={selectedField}
           onChange={(e) => setSelectedField(e.target.value)}
-          className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
         >
           <option value="all">Search all fields</option>
           {headers.map(header => (
@@ -80,19 +80,19 @@ export const CustomerSearch: React.FC<CustomerSearchProps> = ({ data }) => {
       </div>
 
       {/* Results Summary */}
-      <div className="flex items-center justify-between text-sm text-slate-600 bg-slate-50 rounded-lg p-3">
-        <span>
+      <div className="flex items-center justify-between text-sm text-slate-600 bg-slate-50 rounded-lg p-3 flex-shrink-0">
+        <span className="truncate">
           {filteredData.length} of {data.length} records
         </span>
         {searchTerm && (
-          <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs">
-            "{searchTerm}"
+          <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs ml-2 flex-shrink-0">
+            "{searchTerm.length > 10 ? searchTerm.substring(0, 10) + '...' : searchTerm}"
           </span>
         )}
       </div>
 
       {/* Results */}
-      <div className="space-y-3 max-h-96 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto space-y-3 min-h-0">
         {filteredData.length === 0 && searchTerm ? (
           <div className="text-center py-8">
             <Search className="w-8 h-8 text-slate-400 mx-auto mb-2" />
@@ -101,17 +101,23 @@ export const CustomerSearch: React.FC<CustomerSearchProps> = ({ data }) => {
           </div>
         ) : (
           filteredData.map((row, index) => (
-            <div key={index} className="bg-white border border-slate-200 rounded-lg p-4 hover:shadow-md transition-shadow">
-              <div className="grid grid-cols-1 gap-2">
+            <div key={index} className="bg-white border border-slate-200 rounded-lg p-3 hover:shadow-md transition-shadow">
+              <div className="space-y-2">
                 {headers.map(header => (
-                  <div key={header} className="flex items-center space-x-2">
-                    {getFieldIcon(header)}
-                    <span className="text-xs font-medium text-slate-500 min-w-20">
-                      {header}:
-                    </span>
-                    <span className="text-sm text-slate-800 flex-1">
-                      {String(row[header]) || 'N/A'}
-                    </span>
+                  <div key={header} className="flex items-start space-x-2 min-w-0">
+                    <div className="flex-shrink-0 mt-0.5">
+                      {getFieldIcon(header)}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-1">
+                        <span className="text-xs font-medium text-slate-500 flex-shrink-0">
+                          {header}:
+                        </span>
+                        <span className="text-sm text-slate-800 break-words overflow-wrap-anywhere">
+                          {String(row[header]) || 'N/A'}
+                        </span>
+                      </div>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -121,24 +127,24 @@ export const CustomerSearch: React.FC<CustomerSearchProps> = ({ data }) => {
       </div>
 
       {/* Data Stats */}
-      <div className="bg-slate-50 rounded-lg p-4">
-        <h4 className="font-medium text-slate-800 mb-2">Data Overview</h4>
-        <div className="grid grid-cols-2 gap-4 text-sm">
-          <div>
+      <div className="bg-slate-50 rounded-lg p-4 flex-shrink-0">
+        <h4 className="font-medium text-slate-800 mb-2 text-sm">Data Overview</h4>
+        <div className="grid grid-cols-1 gap-2 text-sm">
+          <div className="flex justify-between">
             <span className="text-slate-500">Total Records:</span>
-            <span className="ml-2 font-medium">{data.length}</span>
+            <span className="font-medium">{data.length}</span>
           </div>
-          <div>
+          <div className="flex justify-between">
             <span className="text-slate-500">Fields:</span>
-            <span className="ml-2 font-medium">{headers.length}</span>
+            <span className="font-medium">{headers.length}</span>
           </div>
         </div>
         <div className="mt-2">
           <span className="text-slate-500 text-sm">Available Fields:</span>
           <div className="flex flex-wrap gap-1 mt-1">
             {headers.map(header => (
-              <span key={header} className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs">
-                {header}
+              <span key={header} className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs break-all">
+                {header.length > 12 ? header.substring(0, 12) + '...' : header}
               </span>
             ))}
           </div>
