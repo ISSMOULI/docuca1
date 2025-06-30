@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Download, Eye, FileText, ChevronDown, ChevronUp } from 'lucide-react';
 
@@ -35,16 +34,12 @@ export const CSVExtractor: React.FC<CSVExtractorProps> = ({ data }) => {
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     
-    if (navigator.msSaveBlob) {
-      navigator.msSaveBlob(blob, 'extracted_data.csv');
-    } else {
-      link.href = URL.createObjectURL(blob);
-      link.download = 'extracted_data.csv';
-      link.style.visibility = 'hidden';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }
+    link.href = URL.createObjectURL(blob);
+    link.download = 'extracted_data.csv';
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   if (data.length === 0) {
