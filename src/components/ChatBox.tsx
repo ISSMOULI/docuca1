@@ -1,6 +1,6 @@
 
 import React, { useState, useRef } from 'react';
-import { Upload, Search, FileText, MessageCircle, X } from 'lucide-react';
+import { Upload, Search, FileText, MessageCircle, X, ChevronDown, ChevronUp, Filter } from 'lucide-react';
 import { FileUploader } from './FileUploader';
 import { CustomerSearch } from './CustomerSearch';
 import { CSVExtractor } from './CSVExtractor';
@@ -26,6 +26,7 @@ export const ChatBox = () => {
   const [csvData, setCsvData] = useState<any[]>([]);
   const [showUploader, setShowUploader] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
+  const [searchExpanded, setSearchExpanded] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -70,95 +71,138 @@ export const ChatBox = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-      {/* Header */}
-      <div className="bg-white shadow-sm border-b border-slate-200 p-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
-              <MessageCircle className="w-6 h-6 text-white" />
+    <div className="flex flex-col h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+      {/* Modern Header */}
+      <div className="bg-white/80 backdrop-blur-sm shadow-sm border-b border-blue-100 p-6">
+        <div className="flex items-center justify-between max-w-7xl mx-auto">
+          <div className="flex items-center space-x-4">
+            <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-md">
+              <MessageCircle className="w-7 h-7 text-white" />
             </div>
             <div>
-              <h1 className="text-xl font-semibold text-slate-800">File Processing Chat</h1>
-              <p className="text-sm text-slate-500">Upload, extract, and search your data</p>
+              <h1 className="text-2xl font-bold text-slate-800">File Processing Studio</h1>
+              <p className="text-sm text-slate-500">Upload, extract, and search your data with AI assistance</p>
             </div>
           </div>
-          <div className="flex space-x-2">
+          <div className="flex space-x-3">
             <button
               onClick={() => setShowSearch(!showSearch)}
-              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center space-x-2"
+              className="px-5 py-2.5 bg-gradient-to-r from-emerald-500 to-green-600 text-white rounded-xl hover:from-emerald-600 hover:to-green-700 transition-all duration-200 flex items-center space-x-2 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
             >
               <Search className="w-4 h-4" />
-              <span>Search</span>
+              <span className="font-medium">Search Data</span>
             </button>
             <button
               onClick={() => setShowUploader(!showUploader)}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2"
+              className="px-5 py-2.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl hover:from-blue-600 hover:to-indigo-700 transition-all duration-200 flex items-center space-x-2 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
             >
               <Upload className="w-4 h-4" />
-              <span>Upload</span>
+              <span className="font-medium">Upload File</span>
             </button>
           </div>
         </div>
       </div>
 
-      {/* Side Panels */}
+      {/* Main Content Area */}
       <div className="flex flex-1 overflow-hidden">
         {/* File Uploader Panel */}
         {showUploader && (
-          <div className="w-80 bg-white border-r border-slate-200 p-4 overflow-y-auto">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-slate-800">File Upload</h3>
-              <button
-                onClick={() => setShowUploader(false)}
-                className="p-1 hover:bg-slate-100 rounded-full transition-colors"
-              >
-                <X className="w-5 h-5 text-slate-500" />
-              </button>
+          <div className="w-96 bg-white/90 backdrop-blur-sm border-r border-blue-100 shadow-lg">
+            <div className="p-6 border-b border-blue-100 bg-gradient-to-r from-blue-50 to-indigo-50">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
+                    <Upload className="w-4 h-4 text-white" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-slate-800">File Upload</h3>
+                </div>
+                <button
+                  onClick={() => setShowUploader(false)}
+                  className="p-2 hover:bg-blue-100 rounded-lg transition-colors"
+                >
+                  <X className="w-5 h-5 text-slate-500" />
+                </button>
+              </div>
             </div>
-            <FileUploader onFileProcessed={handleFileProcessed} />
+            <div className="p-6 overflow-y-auto">
+              <FileUploader onFileProcessed={handleFileProcessed} />
+            </div>
           </div>
         )}
 
-        {/* Search Panel */}
+        {/* Search Panel with Expandable Section */}
         {showSearch && (
-          <div className="w-80 bg-white border-r border-slate-200 p-4 overflow-y-auto">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-slate-800">Customer Search</h3>
-              <button
-                onClick={() => setShowSearch(false)}
-                className="p-1 hover:bg-slate-100 rounded-full transition-colors"
-              >
-                <X className="w-5 h-5 text-slate-500" />
-              </button>
+          <div className="w-96 bg-white/90 backdrop-blur-sm border-r border-blue-100 shadow-lg flex flex-col">
+            <div className="p-6 border-b border-blue-100 bg-gradient-to-r from-emerald-50 to-green-50">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center">
+                    <Search className="w-4 h-4 text-white" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-slate-800">Data Search</h3>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <button
+                    onClick={() => setSearchExpanded(!searchExpanded)}
+                    className="p-2 hover:bg-emerald-100 rounded-lg transition-colors flex items-center space-x-1"
+                    title={searchExpanded ? "Collapse search" : "Expand search"}
+                  >
+                    <Filter className="w-4 h-4 text-emerald-600" />
+                    {searchExpanded ? <ChevronUp className="w-4 h-4 text-emerald-600" /> : <ChevronDown className="w-4 h-4 text-emerald-600" />}
+                  </button>
+                  <button
+                    onClick={() => setShowSearch(false)}
+                    className="p-2 hover:bg-emerald-100 rounded-lg transition-colors"
+                  >
+                    <X className="w-5 h-5 text-slate-500" />
+                  </button>
+                </div>
+              </div>
             </div>
-            <CustomerSearch data={csvData} />
+            
+            {/* Expandable Search Content */}
+            <div className={`flex-1 overflow-hidden transition-all duration-300 ${searchExpanded ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+              {searchExpanded && (
+                <div className="p-6 h-full overflow-y-auto">
+                  <CustomerSearch data={csvData} />
+                </div>
+              )}
+            </div>
+            
+            {/* Collapsed State */}
+            {!searchExpanded && (
+              <div className="p-6 text-center">
+                <Search className="w-12 h-12 text-slate-300 mx-auto mb-3" />
+                <p className="text-slate-500 text-sm">Search panel collapsed</p>
+                <p className="text-xs text-slate-400">Click expand to access search features</p>
+              </div>
+            )}
           </div>
         )}
 
         {/* Main Chat Area */}
         <div className="flex-1 flex flex-col">
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+          <div className="flex-1 overflow-y-auto p-6 space-y-6 max-w-4xl mx-auto w-full">
             {messages.map((message) => (
               <div
                 key={message.id}
                 className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
               >
                 <div
-                  className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
+                  className={`max-w-2xl px-6 py-4 rounded-2xl shadow-md ${
                     message.type === 'user'
-                      ? 'bg-blue-600 text-white'
+                      ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white'
                       : 'bg-white text-slate-800 border border-slate-200'
                   }`}
                 >
-                  <p className="text-sm">{message.content}</p>
+                  <p className="text-sm leading-relaxed">{message.content}</p>
                   {message.fileData && (
-                    <div className="mt-2 pt-2 border-t border-slate-300">
+                    <div className="mt-4 pt-4 border-t border-slate-300/50">
                       <CSVExtractor data={message.fileData} />
                     </div>
                   )}
-                  <p className={`text-xs mt-1 ${
+                  <p className={`text-xs mt-3 ${
                     message.type === 'user' ? 'text-blue-100' : 'text-slate-500'
                   }`}>
                     {message.timestamp.toLocaleTimeString()}
@@ -169,23 +213,25 @@ export const ChatBox = () => {
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Input Area */}
-          <div className="bg-white border-t border-slate-200 p-4">
-            <div className="flex space-x-2">
-              <input
-                type="text"
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                onKeyPress={handleKeyPress}
-                placeholder="Type a message..."
-                className="flex-1 px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-              <button
-                onClick={handleSendMessage}
-                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-              >
-                Send
-              </button>
+          {/* Modern Input Area */}
+          <div className="bg-white/80 backdrop-blur-sm border-t border-blue-100 p-6">
+            <div className="max-w-4xl mx-auto">
+              <div className="flex space-x-4">
+                <input
+                  type="text"
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  placeholder="Type your message here..."
+                  className="flex-1 px-5 py-3 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white/90 backdrop-blur-sm shadow-sm transition-all duration-200"
+                />
+                <button
+                  onClick={handleSendMessage}
+                  className="px-8 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl hover:from-blue-600 hover:to-indigo-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 font-medium"
+                >
+                  Send
+                </button>
+              </div>
             </div>
           </div>
         </div>
