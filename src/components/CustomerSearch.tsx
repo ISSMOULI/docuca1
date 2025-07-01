@@ -102,9 +102,8 @@ export const CustomerSearch: React.FC<CustomerSearchProps> = ({ data }) => {
           </div>
         ) : (
           filteredData.map((row, index) => (
-            <div key={index} className="bg-white border border-slate-200 rounded-lg p-4 hover:shadow-md transition-shadow  flex flex-col">
-              {{/* Displaying each row's data */}
-             {/* <div className="flex-1 overflow-y-auto space-y-3">
+            <div key={index} className="bg-white border border-slate-200 rounded-lg p-4 hover:shadow-md transition-shadow h-48 flex flex-col">
+              <div className="flex-1 overflow-y-auto space-y-3">
                 {headers.map(header => (
                   <div key={header} className="flex items-start space-x-3 min-w-0">
                     <div className="flex-shrink-0 mt-0.5">
