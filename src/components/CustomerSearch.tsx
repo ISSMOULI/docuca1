@@ -101,19 +101,19 @@ export const CustomerSearch: React.FC<CustomerSearchProps> = ({ data }) => {
           </div>
         ) : (
           filteredData.map((row, index) => (
-            <div key={index} className="bg-white border border-slate-200 rounded-lg p-3 hover:shadow-md transition-shadow">
-              <div className="space-y-2">
+            <div key={index} className="bg-white border border-slate-200 rounded-lg p-4 hover:shadow-md transition-shadow h-48 flex flex-col">
+              <div className="flex-1 overflow-y-auto space-y-3">
                 {headers.map(header => (
-                  <div key={header} className="flex items-start space-x-2 min-w-0">
+                  <div key={header} className="flex items-start space-x-3 min-w-0">
                     <div className="flex-shrink-0 mt-0.5">
                       {getFieldIcon(header)}
                     </div>
                     <div className="min-w-0 flex-1">
-                      <div className="flex flex-col sm:flex-row sm:items-center gap-1">
+                      <div className="flex flex-col gap-1">
                         <span className="text-xs font-medium text-slate-500 flex-shrink-0">
                           {header}:
                         </span>
-                        <span className="text-sm text-slate-800 break-words overflow-wrap-anywhere">
+                        <span className="text-sm text-slate-800 break-words whitespace-pre-wrap word-wrap leading-relaxed">
                           {String(row[header]) || 'N/A'}
                         </span>
                       </div>
